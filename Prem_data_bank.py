@@ -1,3 +1,8 @@
+## this is an old version but I kept it for testing to see if I needed to revert back if I encountered new errors
+## It does not work as well as the new model called Prem_result_ML_project.py
+## this model only works locally on my computer as it uses a manual directory to find the data-sets, but the newer version works on all platforms
+
+
 import pandas as pd
 import numpy as np
 from sklearn.linear_model import LogisticRegression
