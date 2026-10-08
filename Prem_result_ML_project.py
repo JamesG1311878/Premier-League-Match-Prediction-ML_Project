@@ -59,7 +59,7 @@ test = data[data["Date"] >= "2025-08-01"]
 print("Baseline:", (test["FTR"] == "H").mean()) ## we need a baseline to see how accurate our model is, the baseline I have chosen is that all matches predict Home win, as this is the most common result of the 3
 
 
-model1 = LogisticRegression(max_iter=1000)
+model1 = LogisticRegression(max_iter=1000) ## I was looking at scikit defaults and what people normally use as their settings for this model, I found that most people use max_iter = 100, which means the model queries how wrong the data is and improves it 100 times, I wanted to increase accuracy further so I increased this by 10 times.
 model1.fit(train[features], train["FTR"])
 print("Logistic regression:", model1.score(test[features], test["FTR"]))
 
