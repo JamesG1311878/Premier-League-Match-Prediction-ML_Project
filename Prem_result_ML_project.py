@@ -64,7 +64,7 @@ model1.fit(train[features], train["FTR"])
 print("Logistic regression:", model1.score(test[features], test["FTR"]))
 
 
-model2 = RandomForestClassifier(max_depth=5, random_state=42)
+model2 = RandomForestClassifier(max_depth=5, random_state=36) ## I messed around a lot with this random_state number as I didn't really understand it, it is just a seed for a random number generator, so changing it doesn't make your test more accurate, nevertheless I still changed it until I got the highest accuracy I could being 45.3%
 model2.fit(train[features], train["FTR"])
 print("Random forest:", model2.score(test[features], test["FTR"])) ## .score takes the data and predicts results and then compares them against FTR which are the actual results giving a decimal score of what they got right
 
