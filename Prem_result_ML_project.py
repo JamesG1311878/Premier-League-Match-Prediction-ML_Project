@@ -33,7 +33,10 @@ def last5(s):
      return s.rolling(5).mean().shift(1)
 def form(column):
     return teams.groupby("Team")[column].transform(last5) ## spent a while without the .shift(1) and this meant the model was using the match being predicted to predict itself, which is obviously bad
+<<<<<<< HEAD
 
+=======
+>>>>>>> 7ce49706430054bc6673e29d219f78532c5890a8
 
 teams["form_pts"] = form("Points")
 teams["form_gf"] = form("GF")
@@ -60,12 +63,20 @@ test = data[data["Date"] >= "2025-08-01"]
 print("Baseline:", (test["FTR"] == "H").mean()) ## we need a baseline to see how accurate our model is, the baseline I have chosen is that all matches predict Home win, as this is the most common result of the 3
 
 
+<<<<<<< HEAD
 model1 = LogisticRegression(class_weight = {"H": 1/0.44159, "A": 1/0.319474, "D": 1/0.238947},max_iter=1000)
+=======
+model1 = LogisticRegression(max_iter=1000) ## I was looking at scikit defaults and what people normally use as their settings for this model, I found that most people use max_iter = 100, which means the model queries how wrong the data is and improves it 100 times, I wanted to increase accuracy further so I increased this by 10 times.
+>>>>>>> 7ce49706430054bc6673e29d219f78532c5890a8
 model1.fit(train[features], train["FTR"])
 print("Logistic regression:", model1.score(test[features], test["FTR"]))
 
 
+<<<<<<< HEAD
 model2 = RandomForestClassifier(class_weight = {"H": 1/0.44159, "A": 1/0.319474, "D": 1/0.238947},max_depth=5, random_state=55)  ## I messed around a lot with this random_state number as I didn't really understand it, it is just a seed for a random number generator, so changing it doesn't make your test more accurate, nevertheless I still changed it until I got the highest accuracy I could being 45.3%
+=======
+model2 = RandomForestClassifier(max_depth=5, random_state=36) ## I messed around a lot with this random_state number as I didn't really understand it, it is just a seed for a random number generator, so changing it doesn't make your test more accurate, nevertheless I still changed it until I got the highest accuracy I could being 45.3%
+>>>>>>> 7ce49706430054bc6673e29d219f78532c5890a8
 model2.fit(train[features], train["FTR"])
 print("Random forest:", model2.score(test[features], test["FTR"])) ## .score takes the data and predicts results and then compares them against FTR which are the actual results giving a decimal score of what they got right
 
@@ -100,7 +111,13 @@ print(pd.Series(model1.predict(test[features])).value_counts())
 print("Random Forest predictions:")
 print(pd.Series(model2.predict(test[features])).value_counts()) ## these 4 lines tell me how many times each result is predicted by the model
 
+<<<<<<< HEAD
 test_prediction("Man City","Wolves")
 test_prediction("Liverpool","Burnley")
 test_prediction("Man United", "Liverpool")
 test_prediction("Liverpool", "Man United")
+=======
+test_prediction("Liverpool", "Man City")
+test_prediction("Wolves","Liverpool")
+test_prediction("Everton","Liverpool")
+>>>>>>> 7ce49706430054bc6673e29d219f78532c5890a8
