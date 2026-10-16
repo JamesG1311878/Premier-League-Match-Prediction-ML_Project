@@ -29,10 +29,11 @@ teams["Points"] = np.where(teams["GF"] > teams["GA"], 3,
                   np.where(teams["GF"] == teams["GA"], 1, 0)) ## this is just the way to convert goals stats from the game into a concrete result using numpy, it just compares home goals to away goals and labels based on the different comparisons
 
 teams = teams.sort_values(["Team", "Date"]).reset_index(drop=True)
-
+def last5(s):
+     return s.rolling(5).mean().shift(1)
 def form(column):
-    return teams.groupby("Team")[column].transform( ## spent a while without the .shift(1) and this meant the model was using the match being predicted to predict itself, which is obviously bad
-        lambda s: s.rolling(5).mean().shift(1)) ## finds average of stat over the last 5 matches ordered by team so you can compare their last 5
+    return teams.groupby("Team")[column].transform(last5) ## spent a while without the .shift(1) and this meant the model was using the match being predicted to predict itself, which is obviously bad
+
 
 teams["form_pts"] = form("Points")
 teams["form_gf"] = form("GF")
@@ -59,12 +60,12 @@ test = data[data["Date"] >= "2025-08-01"]
 print("Baseline:", (test["FTR"] == "H").mean()) ## we need a baseline to see how accurate our model is, the baseline I have chosen is that all matches predict Home win, as this is the most common result of the 3
 
 
-model1 = LogisticRegression(max_iter=1000)
+model1 = LogisticRegression(class_weight = {"H": 1/0.44159, "A": 1/0.319474, "D": 1/0.238947},max_iter=1000)
 model1.fit(train[features], train["FTR"])
 print("Logistic regression:", model1.score(test[features], test["FTR"]))
 
 
-model2 = RandomForestClassifier(max_depth=5, random_state=36)  ## I messed around a lot with this random_state number as I didn't really understand it, it is just a seed for a random number generator, so changing it doesn't make your test more accurate, nevertheless I still changed it until I got the highest accuracy I could being 45.3%
+model2 = RandomForestClassifier(class_weight = {"H": 1/0.44159, "A": 1/0.319474, "D": 1/0.238947},max_depth=5, random_state=55)  ## I messed around a lot with this random_state number as I didn't really understand it, it is just a seed for a random number generator, so changing it doesn't make your test more accurate, nevertheless I still changed it until I got the highest accuracy I could being 45.3%
 model2.fit(train[features], train["FTR"])
 print("Random forest:", model2.score(test[features], test["FTR"])) ## .score takes the data and predicts results and then compares them against FTR which are the actual results giving a decimal score of what they got right
 
@@ -99,6 +100,7 @@ print(pd.Series(model1.predict(test[features])).value_counts())
 print("Random Forest predictions:")
 print(pd.Series(model2.predict(test[features])).value_counts()) ## these 4 lines tell me how many times each result is predicted by the model
 
-test_prediction("Liverpool", "Man City")
-test_prediction("Wolves","Liverpool")
-test_prediction("Everton","Liverpool")
+test_prediction("Man City","Wolves")
+test_prediction("Liverpool","Burnley")
+test_prediction("Man United", "Liverpool")
+test_prediction("Liverpool", "Man United")
