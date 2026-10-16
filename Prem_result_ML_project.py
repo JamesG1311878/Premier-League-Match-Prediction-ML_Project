@@ -29,10 +29,10 @@ teams["Points"] = np.where(teams["GF"] > teams["GA"], 3,
                   np.where(teams["GF"] == teams["GA"], 1, 0))
 
 teams = teams.sort_values(["Team", "Date"]).reset_index(drop=True)
-
+def last5(s):
+     return s.rolling(5).mean().shift(1)
 def form(column):
-    return teams.groupby("Team")[column].transform( ## spent a while without the .shift(1) and this meant the model was using the match being predicted to predict itself, which is obviously bad
-        lambda s: s.rolling(5).mean().shift(1)) ## finds average of stat over the last 5 matches ordered by team so you can compare their last 5
+    return teams.groupby("Team")[column].transform(last5) ## spent a while without the .shift(1) and this meant the model was using the match being predicted to predict itself, which is obviously bad
 
 teams["form_pts"] = form("Points")
 teams["form_gf"] = form("GF")
