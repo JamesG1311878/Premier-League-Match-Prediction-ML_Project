@@ -35,5 +35,5 @@ How it works
 Limitations and next steps
 
 - Only six features, and they ignore the strength of the opponent.
-- Accuracy hides how badly draws are predicted. Next I would add a per-class report and try class weighting.
+- Accuracy hides how badly draws are predicted. Next I would add a per-class report and try class weighting (I have now added this and a Draw is now much more likely)
 - Compare against bookmaker odds and add features such as Elo ratings.
