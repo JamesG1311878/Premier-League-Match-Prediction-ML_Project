@@ -10,7 +10,7 @@ Model Accuracy:
 
 Baseline (always home win): 42.4% 
 Logistic regression: 46.1% 
-Random forest: 44.5% 
+Random forest: 45.3% 
 
 Number of each result the models predicted:
 
